@@ -1,4 +1,4 @@
-package com.botlabs.scripts;
+package com.seeu.resources;
 
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -9,7 +9,7 @@ import jakarta.ws.rs.core.MediaType;
  * Root resource (exposed at "myresource" path)
  */
 @Path("myresource")
-public class MyResource {
+public class BaseResource {
 
     /**
      * Method handling HTTP GET requests. The returned object will be sent
