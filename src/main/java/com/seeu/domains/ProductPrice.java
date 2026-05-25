@@ -11,6 +11,10 @@ public class ProductPrice extends BaseEntity {
     private Boolean availability;
     @SerializedName("last_updated")
     private Instant lastUpdated;
+    @SerializedName("product")
+    private Product product;
+    @SerializedName("retailer")
+    private Retailer retailer;
 
     public ProductPrice() {
     }
@@ -37,6 +41,22 @@ public class ProductPrice extends BaseEntity {
 
     public void setLastUpdated(Instant lastUpdated) {
         this.lastUpdated = lastUpdated;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
+    public Retailer getRetailer() {
+        return retailer;
+    }
+
+    public void setRetailer(Retailer retailer) {
+        this.retailer = retailer;
     }
 
     @Override

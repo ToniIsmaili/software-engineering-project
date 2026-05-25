@@ -13,6 +13,8 @@ public class User extends BaseEntity {
     private Boolean isVerified;
     @SerializedName("created_at")
     private Instant createdAt;
+    @SerializedName("role")
+    private Role role;
 
     public User() {
     }
@@ -49,6 +51,14 @@ public class User extends BaseEntity {
         this.createdAt = createdAt;
     }
 
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
     @Override
     public String validate() {
         String validation = isValidId(getId());
@@ -56,5 +66,9 @@ public class User extends BaseEntity {
             return validation;
         }
         return null;
+    }
+
+    public enum Role {
+        USER, ADMIN
     }
 }
