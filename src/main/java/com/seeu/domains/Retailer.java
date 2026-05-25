@@ -2,6 +2,9 @@ package com.seeu.domains;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
 public class Retailer extends BaseEntity {
     @SerializedName("name")
     private String name;
@@ -34,5 +37,11 @@ public class Retailer extends BaseEntity {
             return validation;
         }
         return null;
+    }
+
+    public void populatePs(PreparedStatement ps) throws SQLException {
+        ps.setString(1, getId());
+        ps.setString(2, getName());
+        ps.setString(3, getUrl());
     }
 }
