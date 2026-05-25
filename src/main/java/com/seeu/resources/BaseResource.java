@@ -1,25 +1,18 @@
 package com.seeu.resources;
 
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
+import com.google.gson.Gson;
+import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 
-/**
- * Root resource (exposed at "myresource" path)
- */
-@Path("myresource")
-public class BaseResource {
+@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
+public abstract class BaseResource {
+    public <T> T fromJson(String json, Class<T> classOfT) {
+        return new Gson().fromJson(json, classOfT);
+    }
 
-    /**
-     * Method handling HTTP GET requests. The returned object will be sent
-     * to the client as "text/plain" media type.
-     *
-     * @return String that will be returned as a text/plain response.
-     */
-    @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    public String getIt() {
-        return "Got it!";
+    public <T> String toJson(T t) {
+        return new Gson().toJson(t);
     }
 }
