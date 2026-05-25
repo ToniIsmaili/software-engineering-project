@@ -14,6 +14,9 @@ public class Product extends BaseEntity {
     @SerializedName("specifications")
     private String specifications;
 
+    public Product() {
+    }
+
     public String getName() {
         return name;
     }
