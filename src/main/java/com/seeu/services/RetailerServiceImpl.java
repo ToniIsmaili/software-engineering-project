@@ -5,8 +5,35 @@ import com.seeu.domains.Retailer;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RetailerServiceImpl implements RetailerService {
+
+    @Override
+    public List<Retailer> getAll() throws Exception {
+        List<Retailer> retailers = new ArrayList<>();
+        Connection connection = DataSource.getConnection();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            ps = connection.prepareStatement(SQL.GET_ALL);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                retailers.add(new Retailer(rs));
+            }
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (ps != null) {
+                ps.close();
+            }
+            connection.close();
+        }
+        return retailers;
+    }
 
     @Override
     public void save(Retailer retailer) throws Exception {
@@ -24,7 +51,27 @@ public class RetailerServiceImpl implements RetailerService {
         }
     }
 
+    @Override
+    public void delete(String id) throws Exception {
+        Connection connection = DataSource.getConnection();
+        PreparedStatement ps = null;
+        try {
+            ps = connection.prepareStatement(SQL.DELETE);
+            ps.setString(1, id);
+            ps.executeUpdate();
+        } finally {
+            if (ps != null) {
+                ps.close();
+            }
+            connection.close();
+        }
+    }
+
     public static class SQL {
+        public static final String GET_ALL = """
+                SELECT * FROM retailers;
+                """;
+
         public static final String SAVE = """
                 INSERT INTO retailers (id, name, url)
                 VALUES (?::uuid, ?, ?)
@@ -32,6 +79,11 @@ public class RetailerServiceImpl implements RetailerService {
                     DO UPDATE SET
                                   name = EXCLUDED.name,
                                   url = EXCLUDED.url;
+                """;
+
+        public static final String DELETE = """
+                DELETE FROM retailers
+                WHERE id = ?::uuid;
                 """;
     }
 }

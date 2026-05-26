@@ -16,4 +16,16 @@ public class RetailerResourceTest extends BaseTest {
         Response response = new RetailerResource().save(payload);
         System.out.println(response.getEntity());
     }
+
+    @Test
+    public void testDelete() throws Exception {
+        Response response = new RetailerResource().delete("7ea8a76b-8061-4457-92eb-4ae7665dc203");
+        System.out.println(response.getEntity());
+    }
+
+    @Test
+    public void testGetAll() throws Exception {
+        Response response = new RetailerResource().getAll();
+        System.out.println(response.getEntity());
+    }
 }

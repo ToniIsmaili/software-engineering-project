@@ -3,6 +3,7 @@ package com.seeu.domains;
 import com.google.gson.annotations.SerializedName;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class Retailer extends BaseEntity {
@@ -12,6 +13,12 @@ public class Retailer extends BaseEntity {
     private String url;
 
     public Retailer() {
+    }
+
+    public Retailer(ResultSet rs) throws Exception {
+        setId(rs.getString("id"));
+        setName(rs.getString("name"));
+        setUrl(rs.getString("url"));
     }
 
     public String getName() {
