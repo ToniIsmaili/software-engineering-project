@@ -28,4 +28,10 @@ public class RetailerResourceTest extends BaseTest {
         Response response = new RetailerResource().getAll();
         System.out.println(response.getEntity());
     }
+
+    @Test
+    public void testGet() throws Exception {
+        Response response = new RetailerResource().get("6b5bad3f-eda3-4362-b529-6201f635ec03");
+        System.out.println(response.getEntity());
+    }
 }

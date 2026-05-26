@@ -7,6 +7,8 @@ import java.util.List;
 public interface RetailerService {
     List<Retailer> getAll() throws Exception;
 
+    Retailer get(String id) throws Exception;
+
     void save(Retailer retailer) throws Exception;
 
     void delete(String id) throws Exception;

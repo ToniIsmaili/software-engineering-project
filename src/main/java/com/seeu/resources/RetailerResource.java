@@ -22,6 +22,15 @@ public class RetailerResource extends BaseResource {
         return Response.ok(toJson(service.getAll())).build();
     }
 
+    @GET
+    @Path("/{retailer_id}")
+    public Response get(@PathParam("retailer_id") String retailerId) throws Exception {
+        if (retailerId == null || retailerId.isEmpty()) {
+            throw new BadRequestException("Invalid ID.");
+        }
+        return Response.ok(toJson(service.get(retailerId))).build();
+    }
+
     @PUT
     public Response save(String payload) throws Exception {
         Retailer retailer = fromJson(payload, Retailer.class);

@@ -36,6 +36,30 @@ public class RetailerServiceImpl implements RetailerService {
     }
 
     @Override
+    public Retailer get(String id) throws Exception {
+        Connection connection = DataSource.getConnection();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            ps = connection.prepareStatement(SQL.GET_BY_ID);
+            ps.setString(1, id);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return new Retailer(rs);
+            }
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (ps != null) {
+                ps.close();
+            }
+            connection.close();
+        }
+        return null;
+    }
+
+    @Override
     public void save(Retailer retailer) throws Exception {
         Connection connection = DataSource.getConnection();
         PreparedStatement ps = null;
@@ -70,6 +94,11 @@ public class RetailerServiceImpl implements RetailerService {
     public static class SQL {
         public static final String GET_ALL = """
                 SELECT * FROM retailers;
+                """;
+
+        public static final String GET_BY_ID = """
+                SELECT * FROM retailers
+                WHERE id = ?::uuid;
                 """;
 
         public static final String SAVE = """
