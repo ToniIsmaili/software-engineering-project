@@ -2,14 +2,16 @@ package com.seeu.domains;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.time.Instant;
 
 public class User extends BaseEntity {
     @SerializedName("email")
     private String email;
-    @SerializedName("passwordHash")
+    @SerializedName("password_hash")
     private String passwordHash;
-    @SerializedName("isVerified")
+    @SerializedName("is_verified")
     private Boolean isVerified;
     @SerializedName("created_at")
     private Instant createdAt;
@@ -17,6 +19,15 @@ public class User extends BaseEntity {
     private Role role;
 
     public User() {
+    }
+
+    public User(ResultSet rs) throws Exception {
+        setId(rs.getString("id"));
+        setEmail(rs.getString("email"));
+        setPasswordHash(rs.getString("password_hash"));
+        setVerified(rs.getBoolean("is_verified"));
+        setCreatedAt(rs.getTimestamp("created_at").toInstant());
+        setRole(Role.valueOf(rs.getString("role")));
     }
 
     public String getEmail() {
@@ -36,6 +47,9 @@ public class User extends BaseEntity {
     }
 
     public Boolean getVerified() {
+        if (isVerified == null) {
+            setVerified(false);
+        }
         return isVerified;
     }
 
@@ -65,7 +79,18 @@ public class User extends BaseEntity {
         if (validation != null) {
             return validation;
         }
+        if (getRole() == null) {
+            return "Invalid Role Given!";
+        }
         return null;
+    }
+
+    public void populatePs(PreparedStatement ps) throws Exception {
+        ps.setString(1, getId());
+        ps.setString(2, getEmail());
+        ps.setString(3, getPasswordHash());
+        ps.setBoolean(4, getVerified());
+        ps.setString(5, getRole() != null ? getRole().name() : "USER");
     }
 
     public enum Role {
