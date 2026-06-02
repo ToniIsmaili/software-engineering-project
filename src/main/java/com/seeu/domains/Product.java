@@ -2,6 +2,8 @@ package com.seeu.domains;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.List;
 
 public class Product extends BaseEntity {
@@ -19,6 +21,15 @@ public class Product extends BaseEntity {
     private List<ProductPrice> productPrices;
 
     public Product() {
+    }
+
+    public Product(ResultSet rs) throws Exception {
+        setId(rs.getString("id"));
+        setName(rs.getString("name"));
+        setDescription(rs.getString("description"));
+        setBrand(rs.getString("brand"));
+        setCategory(rs.getString("category"));
+        setSpecifications(rs.getString("specifications"));
     }
 
     public String getName() {
@@ -67,6 +78,15 @@ public class Product extends BaseEntity {
 
     public void setProductPrices(List<ProductPrice> productPrices) {
         this.productPrices = productPrices;
+    }
+
+    public void populatePs(PreparedStatement ps) throws Exception {
+        ps.setString(1, getId());
+        ps.setString(2, getName());
+        ps.setString(3, getDescription());
+        ps.setString(4, getBrand());
+        ps.setString(5, getCategory());
+        ps.setString(6, getSpecifications());
     }
 
     @Override

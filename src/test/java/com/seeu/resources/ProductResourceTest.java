@@ -1,11 +1,43 @@
 package com.seeu.resources;
 
 import com.seeu.BaseTest;
+import jakarta.ws.rs.core.Response;
 import org.junit.Test;
 
 public class ProductResourceTest extends BaseTest {
 
     @Test
-    public void testGetAll() {
+    public void testGetAll() throws Exception {
+        System.out.println(new ProductResource().getAll().getEntity());
+    }
+
+    @Test
+    public void testGet() throws Exception {
+        String productId = "5932e2a1-7db6-4774-aee8-9b43639f8e21";
+        Response response = new ProductResource().get(productId);
+        System.out.println(response.getEntity());
+    }
+
+    @Test
+    public void testSave() throws Exception {
+        String payload = """
+                {
+                  "id": "5932e2a1-7db6-4774-aee8-9b43639f8e21",
+                  "name": "Wireless Bluetooth Headphones",
+                  "description": "Over-ear wireless headphones with noise cancellation and 30-hour battery life.",
+                  "brand": "SoundCore",
+                  "category": "Electronics",
+                  "specifications": "500G easy to use blah blah blah updated"
+                }
+                """;
+        Response response = new ProductResource().save(payload);
+        System.out.println(response.getEntity());
+    }
+
+    @Test
+    public void testDelete() throws Exception {
+        String productId = "5932e2a1-7db6-4774-aee8-9b43639f8e21";
+        Response response = new ProductResource().delete(productId);
+        System.out.println(response.getEntity());
     }
 }
