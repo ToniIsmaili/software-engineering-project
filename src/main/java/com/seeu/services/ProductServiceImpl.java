@@ -2,17 +2,20 @@ package com.seeu.services;
 
 import com.seeu.DataSource;
 import com.seeu.domains.Product;
+import com.seeu.domains.ProductPrice;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product get(String productId) throws Exception {
+        Product product = null;
         Connection connection = DataSource.getConnection();
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -21,7 +24,7 @@ public class ProductServiceImpl implements ProductService {
             ps.setString(1, productId);
             rs = ps.executeQuery();
             if (rs.next()) {
-                return new Product(rs);
+                 product = new Product(rs);
             }
         } finally {
             if (rs != null) {
@@ -32,7 +35,10 @@ public class ProductServiceImpl implements ProductService {
             }
             connection.close();
         }
-        return null;
+        if (product != null) {
+            product.setProductPrices(new ProductPricingServiceImpl().getByProductId(productId));
+        }
+        return product;
     }
 
     @Override
@@ -42,6 +48,10 @@ public class ProductServiceImpl implements ProductService {
             while (rs.next()) {
                 products.add(new Product(rs));
             }
+        }
+        Map<String, List<ProductPrice>> productPricingMap = new ProductPricingServiceImpl().getAllGroupedByProduct();
+        for (Product product : products) {
+            product.setProductPrices(productPricingMap.get(product.getId()));
         }
         return products;
     }
