@@ -2,6 +2,8 @@ package com.seeu.domains;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 public class Product extends BaseEntity {
     @SerializedName("name")
     private String name;
@@ -13,6 +15,8 @@ public class Product extends BaseEntity {
     private String category;
     @SerializedName("specifications")
     private String specifications;
+    @SerializedName("product_prices")
+    private List<ProductPrice> productPrices;
 
     public Product() {
     }
@@ -55,6 +59,14 @@ public class Product extends BaseEntity {
 
     public void setSpecifications(String specifications) {
         this.specifications = specifications;
+    }
+
+    public List<ProductPrice> getProductPrices() {
+        return productPrices;
+    }
+
+    public void setProductPrices(List<ProductPrice> productPrices) {
+        this.productPrices = productPrices;
     }
 
     @Override

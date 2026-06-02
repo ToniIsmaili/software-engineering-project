@@ -68,3 +68,7 @@ CREATE TABLE users (
                        CONSTRAINT chk_user_role
                            CHECK (role IN ('USER', 'ADMIN'))
 );
+
+ALTER TABLE scrapers
+ADD CONSTRAINT uq_scraper_retailer
+UNIQUE (retailer_id);
