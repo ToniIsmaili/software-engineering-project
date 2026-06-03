@@ -31,6 +31,7 @@ public class ProductPrice extends BaseEntity {
         setAvailability(rs.getBoolean("availability"));
         setLastUpdated(rs.getTimestamp("last_updated").toInstant());
         setProductId(rs.getString("product_id"));
+        setRetailerId(rs.getString("retailer_id"));
     }
 
     public Integer getPrice() {
