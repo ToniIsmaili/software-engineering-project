@@ -1,5 +1,6 @@
 package com.seeu.resources;
 
+import com.seeu.common.Responses;
 import com.seeu.domains.Retailer;
 import com.seeu.services.RetailerService;
 import com.seeu.services.RetailerServiceImpl;
@@ -26,7 +27,7 @@ public class RetailerResource extends BaseResource {
     @Path("/{retailer_id}")
     public Response get(@PathParam("retailer_id") String retailerId) throws Exception {
         if (retailerId == null || retailerId.isEmpty()) {
-            throw new BadRequestException("Invalid ID.");
+            throw new BadRequestException(Responses.INVALID_ID);
         }
         return Response.ok(toJson(service.get(retailerId))).build();
     }
@@ -42,16 +43,16 @@ public class RetailerResource extends BaseResource {
             throw new BadRequestException(validation);
         }
         service.save(retailer);
-        return Response.ok().build();
+        return Response.ok(Responses.SAVE_SUCCESSFUL).build();
     }
 
     @DELETE
     @Path("/{retailer_id}")
     public Response delete(@PathParam("retailer_id") String retailerId) throws Exception {
         if (retailerId == null || retailerId.isEmpty()) {
-            throw new BadRequestException("Invalid ID.");
+            throw new BadRequestException(Responses.INVALID_ID);
         }
         service.delete(retailerId);
-        return Response.ok().build();
+        return Response.ok(Responses.DELETE_SUCCESSFUL).build();
     }
 }

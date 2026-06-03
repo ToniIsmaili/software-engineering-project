@@ -1,5 +1,6 @@
 package com.seeu.resources;
 
+import com.seeu.common.Responses;
 import com.seeu.domains.Product;
 import com.seeu.domains.ProductPrice;
 import com.seeu.services.ProductPricingService;
@@ -30,7 +31,7 @@ public class ProductResource extends BaseResource {
     @Path("/{product_id}")
     public Response get(@PathParam("product_id") String productId) throws Exception {
         if (productId == null || productId.isEmpty()) {
-            throw new BadRequestException("Invalid ID.");
+            throw new BadRequestException(Responses.INVALID_ID);
         }
         return Response.ok(toJson(productService.get(productId))).build();
     }
@@ -46,7 +47,7 @@ public class ProductResource extends BaseResource {
             throw new BadRequestException(validate);
         }
         productService.save(product);
-        return Response.ok("Product Saved Successfully!").build();
+        return Response.ok(Responses.SAVE_SUCCESSFUL).build();
     }
 
     @PUT
@@ -62,17 +63,17 @@ public class ProductResource extends BaseResource {
             throw new BadRequestException(validate);
         }
         productPricingService.save(productPrice);
-        return Response.ok("Saved pricing!").build();
+        return Response.ok(Responses.SAVE_SUCCESSFUL).build();
     }
 
     @DELETE
     @Path("/{product_id}")
     public Response delete(@PathParam("product_id") String productId) throws Exception {
         if (productId == null || productId.isEmpty()) {
-            throw new BadRequestException("Invalid ID.");
+            throw new BadRequestException(Responses.INVALID_ID);
         }
         productService.delete(productId);
-        return Response.ok("Deleted successfully!").build();
+        return Response.ok(Responses.DELETE_SUCCESSFUL).build();
     }
 
     @DELETE
@@ -80,9 +81,9 @@ public class ProductResource extends BaseResource {
     public Response deletePricing(@PathParam("product_id") String productId,
                                   @PathParam("product_pricing_id") String productPricingId) throws Exception {
         if (productId == null || productId.isEmpty() || productPricingId == null || productPricingId.isEmpty()) {
-            throw new BadRequestException("Invalid ID.");
+            throw new BadRequestException(Responses.INVALID_ID);
         }
         productPricingService.delete(productId, productPricingId);
-        return Response.ok("Deleted successfully!").build();
+        return Response.ok(Responses.DELETE_SUCCESSFUL).build();
     }
 }

@@ -1,5 +1,6 @@
 package com.seeu.resources;
 
+import com.seeu.common.Responses;
 import com.seeu.domains.User;
 import com.seeu.services.UserService;
 import com.seeu.services.UserServiceImpl;
@@ -21,7 +22,7 @@ public class UserResource extends BaseResource {
     @Path("/{user_id}")
     public Response get(@PathParam("user_id") String userId) throws Exception {
         if (userId == null || userId.isEmpty()) {
-            throw new BadRequestException("Invalid ID.");
+            throw new BadRequestException(Responses.INVALID_ID);
         }
         return Response.ok(toJson(service.get(userId))).build();
     }
@@ -37,16 +38,16 @@ public class UserResource extends BaseResource {
             throw new BadRequestException(validate);
         }
         service.save(user);
-        return Response.ok("Save successful.").build();
+        return Response.ok(Responses.SAVE_SUCCESSFUL).build();
     }
 
     @DELETE
     @Path("/{user_id}")
     public Response delete(@PathParam("user_id") String userId) throws Exception {
         if (userId == null || userId.isEmpty()) {
-            throw new BadRequestException("Invalid ID.");
+            throw new BadRequestException(Responses.INVALID_ID);
         }
         service.delete(userId);
-        return Response.ok("Deleted successfully.").build();
+        return Response.ok(Responses.DELETE_SUCCESSFUL).build();
     }
 }
