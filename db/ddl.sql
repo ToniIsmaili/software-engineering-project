@@ -72,3 +72,39 @@ CREATE TABLE users (
 ALTER TABLE scrapers
 ADD CONSTRAINT uq_scraper_retailer
 UNIQUE (retailer_id);
+
+CREATE TABLE scraper_jobs
+(
+    id         UUID PRIMARY KEY,
+
+    start_time TIMESTAMPTZ,
+    end_time   TIMESTAMPTZ,
+
+    status     VARCHAR(20) NOT NULL,
+
+    scraper_id UUID        NOT NULL,
+
+    CONSTRAINT fk_scraper_job_scraper
+        FOREIGN KEY (scraper_id)
+            REFERENCES scrapers (id)
+            ON DELETE CASCADE,
+
+    CONSTRAINT chk_scraper_job_status
+        CHECK (status IN ('SUCCESSFUL', 'FAILED', 'INTERRUPTED', 'RUNNING'))
+);
+
+CREATE TABLE scraper_logs
+(
+    id             UUID PRIMARY KEY,
+
+    timestamp      TIMESTAMPTZ NOT NULL,
+    message        TEXT        NOT NULL,
+    log_level      VARCHAR(20) NOT NULL,
+
+    scraper_job_id UUID        NOT NULL,
+
+    CONSTRAINT fk_scraper_log_job
+        FOREIGN KEY (scraper_job_id)
+            REFERENCES scraper_jobs (id)
+            ON DELETE CASCADE
+);
