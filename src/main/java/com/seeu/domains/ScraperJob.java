@@ -2,6 +2,8 @@ package com.seeu.domains;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.time.Instant;
 
 public class ScraperJob extends BaseEntity {
@@ -13,6 +15,15 @@ public class ScraperJob extends BaseEntity {
     private Status status;
 
     public ScraperJob() {
+    }
+
+    public ScraperJob(ResultSet rs) throws Exception {
+        setId(rs.getString("id"));
+        Timestamp startTime = rs.getTimestamp("start_time");
+        setStartTime(startTime != null ? startTime.toInstant() : null);
+        Timestamp endTime = rs.getTimestamp("end_time");
+        setEndTime(endTime != null ? endTime.toInstant() : null);
+        setStatus(Status.valueOf(rs.getString("status")));
     }
 
     public Instant getStartTime() {

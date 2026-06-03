@@ -1,11 +1,14 @@
 package com.seeu.resources;
 
 import com.seeu.domains.Scraper;
+import com.seeu.services.ScraperJobService;
+import com.seeu.services.ScraperJobServiceImpl;
 import com.seeu.services.ScraperService;
 import com.seeu.services.ScraperServiceImpl;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
@@ -15,14 +18,34 @@ import java.util.UUID;
 
 @Path("/retailers/{retailer_id}/scraper")
 public class ScraperResource extends BaseResource {
-    ScraperService service = new ScraperServiceImpl();
+    ScraperService scraperService = new ScraperServiceImpl();
+    ScraperJobService scraperJobService = new ScraperJobServiceImpl();
 
     @GET
     public Response get(@PathParam("retailer_id") String retailerId) throws Exception {
         if (retailerId == null || retailerId.isEmpty()) {
             throw new BadRequestException("Invalid ID.");
         }
-        return Response.ok(toJson(service.get(retailerId))).build();
+        return Response.ok(toJson(scraperService.get(retailerId))).build();
+    }
+
+    @GET
+    @Path("/jobs")
+    public Response getJobs(@PathParam("retailer_id") String retailerId) throws Exception {
+        if (retailerId == null || retailerId.isEmpty()) {
+            throw new BadRequestException("Invalid ID.");
+        }
+        return Response.ok(toJson(scraperJobService.getByRetailerId(retailerId))).build();
+    }
+
+    @POST
+    @Path("/jobs/start")
+    public Response startJob(@PathParam("retailer_id") String retailerId) throws Exception {
+        if (retailerId == null || retailerId.isEmpty()) {
+            throw new BadRequestException("Invalid ID.");
+        }
+        scraperJobService.startJob(retailerId);
+        return Response.ok().build();
     }
 
     @PUT
@@ -39,7 +62,7 @@ public class ScraperResource extends BaseResource {
         if (validate != null) {
             throw new BadRequestException(validate);
         }
-        service.save(scraper);
+        scraperService.save(scraper);
         return Response.ok("Scraper successfully saved.").build();
     }
 
@@ -48,7 +71,7 @@ public class ScraperResource extends BaseResource {
         if (retailerId == null || retailerId.isEmpty()) {
             throw new BadRequestException("Invalid ID.");
         }
-        service.delete(retailerId);
+        scraperService.delete(retailerId);
         return Response.ok("Successfully deleted!").build();
     }
 }
