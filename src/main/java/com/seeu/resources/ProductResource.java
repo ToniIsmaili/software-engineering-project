@@ -1,6 +1,7 @@
 package com.seeu.resources;
 
 import com.seeu.common.Responses;
+import com.seeu.common.Utils;
 import com.seeu.domains.Product;
 import com.seeu.domains.ProductPrice;
 import com.seeu.services.ProductPricingService;
@@ -30,7 +31,7 @@ public class ProductResource extends BaseResource {
     @GET
     @Path("/{product_id}")
     public Response get(@PathParam("product_id") String productId) throws Exception {
-        if (productId == null || productId.isEmpty()) {
+        if (Utils.isNullOrEmpty(productId)) {
             throw new BadRequestException(Responses.INVALID_ID);
         }
         return Response.ok(toJson(productService.get(productId))).build();
@@ -39,7 +40,7 @@ public class ProductResource extends BaseResource {
     @PUT
     public Response save(String payload) throws Exception {
         Product product = fromJson(payload, Product.class);
-        if (product.getId() == null || product.getId().isEmpty()) {
+        if (Utils.isNullOrEmpty(product.getId())) {
             product.setId(UUID.randomUUID().toString());
         }
         String validate = product.validate();
@@ -55,7 +56,7 @@ public class ProductResource extends BaseResource {
     public Response savePricing(@PathParam("product_id") String productId, String payload) throws Exception {
         ProductPrice productPrice = fromJson(payload, ProductPrice.class);
         productPrice.setProductId(productId);
-        if (productPrice.getId() == null || productPrice.getId().isEmpty()) {
+        if (Utils.isNullOrEmpty(productPrice.getId())) {
             productPrice.setId(UUID.randomUUID().toString());
         }
         String validate = productPrice.validate();
@@ -69,7 +70,7 @@ public class ProductResource extends BaseResource {
     @DELETE
     @Path("/{product_id}")
     public Response delete(@PathParam("product_id") String productId) throws Exception {
-        if (productId == null || productId.isEmpty()) {
+        if (Utils.isNullOrEmpty(productId)) {
             throw new BadRequestException(Responses.INVALID_ID);
         }
         productService.delete(productId);
@@ -80,7 +81,7 @@ public class ProductResource extends BaseResource {
     @Path("/{product_id}/pricing/{product_pricing_id}")
     public Response deletePricing(@PathParam("product_id") String productId,
                                   @PathParam("product_pricing_id") String productPricingId) throws Exception {
-        if (productId == null || productId.isEmpty() || productPricingId == null || productPricingId.isEmpty()) {
+        if (Utils.isNullOrEmpty(productId) || Utils.isNullOrEmpty(productPricingId)) {
             throw new BadRequestException(Responses.INVALID_ID);
         }
         productPricingService.delete(productId, productPricingId);

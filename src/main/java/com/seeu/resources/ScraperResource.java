@@ -1,6 +1,7 @@
 package com.seeu.resources;
 
 import com.seeu.common.Responses;
+import com.seeu.common.Utils;
 import com.seeu.domains.Scraper;
 import com.seeu.domains.ScraperJob;
 import com.seeu.domains.ScraperLog;
@@ -27,7 +28,7 @@ public class ScraperResource extends BaseResource {
 
     @GET
     public Response get(@PathParam("retailer_id") String retailerId) throws Exception {
-        if (retailerId == null || retailerId.isEmpty()) {
+        if (Utils.isNullOrEmpty(retailerId)) {
             throw new BadRequestException(Responses.INVALID_ID);
         }
         return Response.ok(toJson(scraperService.get(retailerId))).build();
@@ -36,7 +37,7 @@ public class ScraperResource extends BaseResource {
     @GET
     @Path("/jobs")
     public Response getJobs(@PathParam("retailer_id") String retailerId) throws Exception {
-        if (retailerId == null || retailerId.isEmpty()) {
+        if (Utils.isNullOrEmpty(retailerId)) {
             throw new BadRequestException(Responses.INVALID_ID);
         }
         return Response.ok(toJson(scraperJobService.getByRetailerId(retailerId))).build();
@@ -45,7 +46,7 @@ public class ScraperResource extends BaseResource {
     @POST
     @Path("/jobs/start")
     public Response startJob(@PathParam("retailer_id") String retailerId) throws Exception {
-        if (retailerId == null || retailerId.isEmpty()) {
+        if (Utils.isNullOrEmpty(retailerId)) {
             throw new BadRequestException(Responses.INVALID_ID);
         }
         scraperJobService.startJob(retailerId);
@@ -57,10 +58,10 @@ public class ScraperResource extends BaseResource {
     public Response endJob(@PathParam("retailer_id") String retailerId,
                            @PathParam("job_id") String jobId,
                            @QueryParam("status") String status) throws Exception {
-        if (retailerId == null || retailerId.isEmpty() || jobId == null || jobId.isEmpty()) {
+        if (Utils.isNullOrEmpty(retailerId) || Utils.isNullOrEmpty(jobId)) {
             throw new BadRequestException(Responses.INVALID_ID);
         }
-        if (status == null || status.isEmpty() || ScraperJob.Status.RUNNING.name().equals(status)) {
+        if (Utils.isNullOrEmpty(status) || ScraperJob.Status.RUNNING.name().equals(status)) {
             throw new BadRequestException(Responses.INVALID_VALUE);
         }
         try {
@@ -76,7 +77,7 @@ public class ScraperResource extends BaseResource {
     @Path("/jobs/{job_id}/logs")
     public Response getLogs(@PathParam("retailer_id") String retailerId,
                             @PathParam("job_id") String jobId) throws Exception {
-        if (jobId == null || jobId.isEmpty()) {
+        if (Utils.isNullOrEmpty(jobId)) {
             throw new BadRequestException(Responses.INVALID_ID);
         }
         return Response.ok(toJson(scraperJobService.getLogs(jobId))).build();
@@ -87,7 +88,7 @@ public class ScraperResource extends BaseResource {
     public Response addLog(@PathParam("retailer_id") String retailerId,
                            @PathParam("job_id") String jobId,
                            String payload) throws Exception {
-        if (jobId == null || jobId.isEmpty()) {
+        if (Utils.isNullOrEmpty(jobId)) {
             throw new BadRequestException(Responses.INVALID_ID);
         }
         ScraperLog scraperLog = fromJson(payload, ScraperLog.class);
@@ -99,12 +100,12 @@ public class ScraperResource extends BaseResource {
 
     @PUT
     public Response save(@PathParam("retailer_id") String retailerId, String payload) throws Exception {
-        if (retailerId == null || retailerId.isEmpty()) {
+        if (Utils.isNullOrEmpty(retailerId)) {
             throw new BadRequestException(Responses.INVALID_ID);
         }
         Scraper scraper = fromJson(payload, Scraper.class);
         scraper.setRetailerId(retailerId);
-        if (scraper.getId() == null || scraper.getId().isEmpty()) {
+        if (Utils.isNullOrEmpty(scraper.getId())) {
             scraper.setId(UUID.randomUUID().toString());
         }
         String validate = scraper.validate();
@@ -117,7 +118,7 @@ public class ScraperResource extends BaseResource {
 
     @DELETE
     public Response delete(@PathParam("retailer_id") String retailerId) throws Exception {
-        if (retailerId == null || retailerId.isEmpty()) {
+        if (Utils.isNullOrEmpty(retailerId)) {
             throw new BadRequestException(Responses.INVALID_ID);
         }
         scraperService.delete(retailerId);

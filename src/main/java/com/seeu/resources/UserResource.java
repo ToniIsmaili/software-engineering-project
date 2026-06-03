@@ -1,6 +1,7 @@
 package com.seeu.resources;
 
 import com.seeu.common.Responses;
+import com.seeu.common.Utils;
 import com.seeu.domains.User;
 import com.seeu.services.UserService;
 import com.seeu.services.UserServiceImpl;
@@ -21,7 +22,7 @@ public class UserResource extends BaseResource {
     @GET
     @Path("/{user_id}")
     public Response get(@PathParam("user_id") String userId) throws Exception {
-        if (userId == null || userId.isEmpty()) {
+        if (Utils.isNullOrEmpty(userId)) {
             throw new BadRequestException(Responses.INVALID_ID);
         }
         return Response.ok(toJson(service.get(userId))).build();
@@ -30,7 +31,7 @@ public class UserResource extends BaseResource {
     @PUT
     public Response save(String payload) throws Exception {
         User user = fromJson(payload, User.class);
-        if (user.getId() == null || user.getId().isEmpty()) {
+        if (Utils.isNullOrEmpty(user.getId())) {
             user.setId(UUID.randomUUID().toString());
         }
         String validate = user.validate();
@@ -44,7 +45,7 @@ public class UserResource extends BaseResource {
     @DELETE
     @Path("/{user_id}")
     public Response delete(@PathParam("user_id") String userId) throws Exception {
-        if (userId == null || userId.isEmpty()) {
+        if (Utils.isNullOrEmpty(userId)) {
             throw new BadRequestException(Responses.INVALID_ID);
         }
         service.delete(userId);
