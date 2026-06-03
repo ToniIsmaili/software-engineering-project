@@ -3,6 +3,7 @@ package com.seeu.resources;
 import com.seeu.common.Responses;
 import com.seeu.domains.Scraper;
 import com.seeu.domains.ScraperJob;
+import com.seeu.domains.ScraperLog;
 import com.seeu.services.ScraperJobService;
 import com.seeu.services.ScraperJobServiceImpl;
 import com.seeu.services.ScraperService;
@@ -69,6 +70,31 @@ public class ScraperResource extends BaseResource {
         }
         scraperJobService.endJob(retailerId, jobId, status);
         return Response.ok(Responses.ENDED_JOB).build();
+    }
+
+    @GET
+    @Path("/jobs/{job_id}/logs")
+    public Response getLogs(@PathParam("retailer_id") String retailerId,
+                            @PathParam("job_id") String jobId) throws Exception {
+        if (jobId == null || jobId.isEmpty()) {
+            throw new BadRequestException(Responses.INVALID_ID);
+        }
+        return Response.ok(toJson(scraperJobService.getLogs(jobId))).build();
+    }
+
+    @POST
+    @Path("/jobs/{job_id}/logs")
+    public Response addLog(@PathParam("retailer_id") String retailerId,
+                           @PathParam("job_id") String jobId,
+                           String payload) throws Exception {
+        if (jobId == null || jobId.isEmpty()) {
+            throw new BadRequestException(Responses.INVALID_ID);
+        }
+        ScraperLog scraperLog = fromJson(payload, ScraperLog.class);
+        scraperLog.setScraperJobId(jobId);
+        scraperLog.setId(UUID.randomUUID().toString());
+        scraperJobService.addLog(scraperLog);
+        return Response.ok(Responses.SAVE_SUCCESSFUL).build();
     }
 
     @PUT

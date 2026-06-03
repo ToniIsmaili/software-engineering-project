@@ -3,6 +3,7 @@ package com.seeu.services;
 import com.seeu.DataSource;
 import com.seeu.common.Responses;
 import com.seeu.domains.ScraperJob;
+import com.seeu.domains.ScraperLog;
 import jakarta.ws.rs.BadRequestException;
 
 import java.sql.Connection;
@@ -66,6 +67,39 @@ public class ScraperJobServiceImpl implements ScraperJobService {
         }
     }
 
+    @Override
+    public List<ScraperLog> getLogs(String jobId) throws Exception {
+        List<ScraperLog> scraperLogs = new ArrayList<>();
+        Connection connection = DataSource.getConnection();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            ps = connection.prepareStatement(SQL.GET_LOGS);
+            ps.setString(1, jobId);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                scraperLogs.add(new ScraperLog(rs));
+            }
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (ps != null) {
+                ps.close();
+            }
+            connection.close();
+        }
+        return scraperLogs;
+    }
+
+    @Override
+    public void addLog(ScraperLog scraperLog) throws Exception {
+        try (Connection connection = DataSource.getConnection(); PreparedStatement ps = connection.prepareStatement(SQL.ADD_LOG)) {
+            scraperLog.populatePs(ps);
+            ps.executeUpdate();
+        }
+    }
+
     private String getScraperId(String retailerId) throws Exception {
         Connection connection = DataSource.getConnection();
         PreparedStatement ps = null;
@@ -121,6 +155,24 @@ public class ScraperJobServiceImpl implements ScraperJobService {
                 SET status   = ?,
                     end_time = NOW()
                 WHERE id = ?::uuid AND scraper_id = ?::uuid;
+                """;
+
+        public static final String GET_LOGS = """
+                SELECT * FROM scraper_logs
+                WHERE scraper_job_id = ?::uuid;
+                """;
+
+        public static final String ADD_LOG = """
+                INSERT INTO scraper_logs (id,
+                                          timestamp,
+                                          message,
+                                          log_level,
+                                          scraper_job_id)
+                VALUES (?::uuid,
+                        NOW(),
+                        ?,
+                        ?,
+                        ?::uuid)
                 """;
     }
 }
