@@ -1,9 +1,12 @@
 package com.seeu.services;
 
 import com.seeu.DataSource;
+import com.seeu.domains.Credentials;
 import com.seeu.domains.User;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.Connection;
+import java.util.UUID;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
@@ -55,6 +58,23 @@ public class UserServiceImpl implements UserService {
             connection.close();
         }
         return null;
+    }
+
+    @Override
+    public User signUp(Credentials credentials) throws Exception {
+        if (getByEmail(credentials.getEmail()) != null) {
+            return null;
+        }
+        User user = new User();
+        user.setId(UUID.randomUUID().toString());
+        user.setEmail(credentials.getEmail());
+        user.setPasswordHash(BCrypt.hashpw(credentials.getPassword(), BCrypt.gensalt()));
+        user.setVerified(false);
+        user.setRole(User.Role.USER);
+        save(user);
+        User created = get(user.getId());
+        created.setPasswordHash(null);
+        return created;
     }
 
     @Override

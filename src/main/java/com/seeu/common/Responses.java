@@ -9,4 +9,5 @@ public class Responses {
     public static final String ENDED_JOB = "{\"message\": \"Job ended: The job has finished and is no longer running.\"}";
     public static final String INVALID_VALUE = "{\"message\": \"Invalid value: The provided value is not a valid option.\"}";
     public static final String UNAUTHORIZED = "{\"message\": \"Unauthorized.\"}";
+    public static final String EMAIL_ALREADY_EXISTS = "{\"message\": \"Email already exists: An account with this email is already registered.\"}";
 }

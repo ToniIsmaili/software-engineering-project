@@ -42,6 +42,21 @@ public class AuthResource extends BaseResource {
     }
 
     @POST
+    @Path("/signup")
+    public Response signUp(String payload) throws Exception {
+        Credentials credentials = fromJson(payload, Credentials.class);
+        String message = credentials.validate();
+        if (message != null) {
+            throw new BadRequestException(message);
+        }
+        User user = userService.signUp(credentials);
+        if (user == null) {
+            return Response.status(Response.Status.CONFLICT).entity(Responses.EMAIL_ALREADY_EXISTS).build();
+        }
+        return Response.status(Response.Status.CREATED).entity(toJson(user)).build();
+    }
+
+    @POST
     @Path("/refresh")
     public Response refresh(String payload) {
         JWTToken token = fromJson(payload, JWTToken.class);
