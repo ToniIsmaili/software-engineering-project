@@ -1,7 +1,9 @@
 package com.seeu.services;
 
 import com.seeu.DataSource;
+import com.seeu.common.Responses;
 import com.seeu.domains.ScraperJob;
+import jakarta.ws.rs.BadRequestException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -41,11 +43,25 @@ public class ScraperJobServiceImpl implements ScraperJobService {
     public void startJob(String retailerId) throws Exception {
         String scraperId = getScraperId(retailerId);
         if (scraperId == null) {
-            return;
+            throw new BadRequestException(Responses.INVALID_ID);
         }
         try (Connection connection = DataSource.getConnection(); PreparedStatement ps = connection.prepareStatement(SQL.START_JOB)) {
             ps.setString(1, UUID.randomUUID().toString());
             ps.setString(2, scraperId);
+            ps.executeUpdate();
+        }
+    }
+
+    @Override
+    public void endJob(String retailerId, String jobId, String status) throws Exception {
+        String scraperId = getScraperId(retailerId);
+        if (scraperId == null) {
+            throw new BadRequestException(Responses.INVALID_ID);
+        }
+        try (Connection connection = DataSource.getConnection(); PreparedStatement ps = connection.prepareStatement(SQL.END_JOB)) {
+            ps.setString(1, status);
+            ps.setString(2, jobId);
+            ps.setString(3, scraperId);
             ps.executeUpdate();
         }
     }
@@ -98,6 +114,13 @@ public class ScraperJobServiceImpl implements ScraperJobService {
                         NULL,
                         'RUNNING',
                         ?::uuid);
+                """;
+
+        public static final String END_JOB = """
+                UPDATE scraper_jobs
+                SET status   = ?,
+                    end_time = NOW()
+                WHERE id = ?::uuid AND scraper_id = ?::uuid;
                 """;
     }
 }

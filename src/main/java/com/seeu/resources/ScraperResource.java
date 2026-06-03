@@ -2,6 +2,7 @@ package com.seeu.resources;
 
 import com.seeu.common.Responses;
 import com.seeu.domains.Scraper;
+import com.seeu.domains.ScraperJob;
 import com.seeu.services.ScraperJobService;
 import com.seeu.services.ScraperJobServiceImpl;
 import com.seeu.services.ScraperService;
@@ -13,6 +14,7 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Response;
 
 import java.util.UUID;
@@ -47,6 +49,26 @@ public class ScraperResource extends BaseResource {
         }
         scraperJobService.startJob(retailerId);
         return Response.ok(Responses.STARTED_JOB).build();
+    }
+
+    @PUT
+    @Path("/jobs/{job_id}/end")
+    public Response endJob(@PathParam("retailer_id") String retailerId,
+                           @PathParam("job_id") String jobId,
+                           @QueryParam("status") String status) throws Exception {
+        if (retailerId == null || retailerId.isEmpty() || jobId == null || jobId.isEmpty()) {
+            throw new BadRequestException(Responses.INVALID_ID);
+        }
+        if (status == null || status.isEmpty() || ScraperJob.Status.RUNNING.name().equals(status)) {
+            throw new BadRequestException(Responses.INVALID_VALUE);
+        }
+        try {
+            ScraperJob.Status.valueOf(status);
+        } catch (IllegalArgumentException e) {
+            throw new BadRequestException(Responses.INVALID_VALUE);
+        }
+        scraperJobService.endJob(retailerId, jobId, status);
+        return Response.ok(Responses.ENDED_JOB).build();
     }
 
     @PUT
