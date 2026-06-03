@@ -1,0 +1,29 @@
+# Optional local PostgreSQL (instead of Neon). Usage:
+#   docker compose -f docker-compose.yml -f docker-compose.local.yml up --build
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: seeu
+      POSTGRES_PASSWORD: seeu
+      POSTGRES_DB: seeu
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./db/ddl.sql:/docker-entrypoint-initdb.d/01-ddl.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U seeu -d seeu"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/seeu?user=seeu&password=seeu
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  postgres_data:

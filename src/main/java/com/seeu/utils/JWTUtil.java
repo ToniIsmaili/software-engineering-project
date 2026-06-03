@@ -9,8 +9,16 @@ import com.seeu.domains.JWTToken;
 import java.util.Date;
 
 public class JWTUtil {
-    private static final String SECRET = "seeu-jwt-secret-only-for-demo";
+    private static final String SECRET = resolveSecret();
     private static final Algorithm ALGORITHM = Algorithm.HMAC256(SECRET);
+
+    private static String resolveSecret() {
+        String secret = System.getenv("JWT_SECRET");
+        if (secret != null && !secret.isBlank()) {
+            return secret;
+        }
+        return "seeu-jwt-secret-only-for-demo";
+    }
     private static final long ACCESS_EXPIRY_MS = 15 * 60 * 1000L;
     private static final long REFRESH_EXPIRY_MS = 7L * 24 * 60 * 60 * 1000;
 

@@ -15,4 +15,7 @@
         <servlet-name>Jersey Web Application</servlet-name>
         <url-pattern>/*</url-pattern>
     </servlet-mapping>
+    <listener>
+        <listener-class>com.seeu.AppLifecycleListener</listener-class>
+    </listener>
 </web-app>

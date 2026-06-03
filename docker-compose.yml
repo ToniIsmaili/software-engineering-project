@@ -1,0 +1,10 @@
+# API only — database is external (e.g. Neon). Set DB_URL in a .env file (see .env.example).
+services:
+  api:
+    build: .
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    environment:
+      JWT_SECRET: ${JWT_SECRET:-local-dev-change-me-before-production}

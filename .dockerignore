@@ -1,0 +1,9 @@
+target/
+.git/
+.idea/
+.smarttomcat/
+*.iml
+.DS_Store
+docs/
+db/generate-mock-prices.py
+db/products-with-ids.json
