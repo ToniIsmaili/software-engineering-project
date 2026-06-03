@@ -9,6 +9,8 @@ public interface ProductService {
 
     List<Product> getAll() throws Exception;
 
+    List<String> getCategories() throws Exception;
+
     void save(Product product) throws Exception;
 
     void delete(String productId) throws Exception;

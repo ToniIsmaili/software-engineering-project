@@ -57,6 +57,19 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<String> getCategories() throws Exception {
+        List<String> categories = new ArrayList<>();
+        try (Connection connection = DataSource.getConnection();
+             PreparedStatement ps = connection.prepareStatement(SQL.GET_CATEGORIES);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                categories.add(rs.getString("category"));
+            }
+        }
+        return categories;
+    }
+
+    @Override
     public void save(Product product) throws Exception {
         try (Connection connection = DataSource.getConnection(); PreparedStatement ps = connection.prepareStatement(SQL.SAVE)) {
             product.populatePs(ps);
@@ -76,6 +89,13 @@ public class ProductServiceImpl implements ProductService {
         public static final String GET_ALL = """
                 SELECT *
                 FROM products;
+                """;
+
+        public static final String GET_CATEGORIES = """
+                SELECT DISTINCT category
+                FROM products
+                WHERE category IS NOT NULL
+                ORDER BY category;
                 """;
 
         public static final String GET_BY_ID = """

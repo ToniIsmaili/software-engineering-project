@@ -61,4 +61,10 @@ public class ProductResourceTest extends BaseTest {
         Response response = new ProductResource().deletePricing(productId, pricingId);
         System.out.println(response.getEntity());
     }
+
+    @Test
+    public void testGetCategories() throws Exception {
+        Response response = new ProductResource().getCategories();
+        System.out.println(response.getEntity());
+    }
 }

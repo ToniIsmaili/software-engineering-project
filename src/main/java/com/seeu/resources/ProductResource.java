@@ -31,6 +31,12 @@ public class ProductResource extends BaseResource {
     }
 
     @GET
+    @Path("/categories")
+    public Response getCategories() throws Exception {
+        return Response.ok(toJson(productService.getCategories())).build();
+    }
+
+    @GET
     @Path("/{product_id}")
     public Response get(@PathParam("product_id") String productId) throws Exception {
         validateIds(productId);
