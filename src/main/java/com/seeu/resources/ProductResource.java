@@ -31,9 +31,7 @@ public class ProductResource extends BaseResource {
     @GET
     @Path("/{product_id}")
     public Response get(@PathParam("product_id") String productId) throws Exception {
-        if (Utils.isNullOrEmpty(productId)) {
-            throw new BadRequestException(Responses.INVALID_ID);
-        }
+        validateIds(productId);
         return Response.ok(toJson(productService.get(productId))).build();
     }
 
@@ -70,9 +68,7 @@ public class ProductResource extends BaseResource {
     @DELETE
     @Path("/{product_id}")
     public Response delete(@PathParam("product_id") String productId) throws Exception {
-        if (Utils.isNullOrEmpty(productId)) {
-            throw new BadRequestException(Responses.INVALID_ID);
-        }
+        validateIds(productId);
         productService.delete(productId);
         return Response.ok(Responses.DELETE_SUCCESSFUL).build();
     }
@@ -81,9 +77,7 @@ public class ProductResource extends BaseResource {
     @Path("/{product_id}/pricing/{product_pricing_id}")
     public Response deletePricing(@PathParam("product_id") String productId,
                                   @PathParam("product_pricing_id") String productPricingId) throws Exception {
-        if (Utils.isNullOrEmpty(productId) || Utils.isNullOrEmpty(productPricingId)) {
-            throw new BadRequestException(Responses.INVALID_ID);
-        }
+        validateIds(productId, productPricingId);
         productPricingService.delete(productId, productPricingId);
         return Response.ok(Responses.DELETE_SUCCESSFUL).build();
     }

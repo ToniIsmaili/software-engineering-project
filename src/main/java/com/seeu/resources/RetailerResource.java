@@ -27,9 +27,7 @@ public class RetailerResource extends BaseResource {
     @GET
     @Path("/{retailer_id}")
     public Response get(@PathParam("retailer_id") String retailerId) throws Exception {
-        if (Utils.isNullOrEmpty(retailerId)) {
-            throw new BadRequestException(Responses.INVALID_ID);
-        }
+        validateIds(retailerId);
         return Response.ok(toJson(service.get(retailerId))).build();
     }
 
@@ -50,9 +48,7 @@ public class RetailerResource extends BaseResource {
     @DELETE
     @Path("/{retailer_id}")
     public Response delete(@PathParam("retailer_id") String retailerId) throws Exception {
-        if (Utils.isNullOrEmpty(retailerId)) {
-            throw new BadRequestException(Responses.INVALID_ID);
-        }
+        validateIds(retailerId);
         service.delete(retailerId);
         return Response.ok(Responses.DELETE_SUCCESSFUL).build();
     }
