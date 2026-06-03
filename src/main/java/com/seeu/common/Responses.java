@@ -8,4 +8,5 @@ public class Responses {
     public static final String STARTED_JOB = "{\"message\": \"Job started successfully: The job has been started and is now running.\"}";
     public static final String ENDED_JOB = "{\"message\": \"Job ended: The job has finished and is no longer running.\"}";
     public static final String INVALID_VALUE = "{\"message\": \"Invalid value: The provided value is not a valid option.\"}";
+    public static final String UNAUTHORIZED = "{\"message\": \"Unauthorized.\"}";
 }

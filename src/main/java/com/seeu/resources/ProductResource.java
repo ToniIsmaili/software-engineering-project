@@ -1,5 +1,6 @@
 package com.seeu.resources;
 
+import com.seeu.annotations.Secured;
 import com.seeu.common.Responses;
 import com.seeu.common.Utils;
 import com.seeu.domains.Product;
@@ -18,6 +19,7 @@ import jakarta.ws.rs.core.Response;
 
 import java.util.UUID;
 
+@Secured
 @Path("/products")
 public class ProductResource extends BaseResource {
     ProductService productService = new ProductServiceImpl();

@@ -1,5 +1,6 @@
 package com.seeu.resources;
 
+import com.seeu.annotations.Secured;
 import com.seeu.common.Responses;
 import com.seeu.common.Utils;
 import com.seeu.domains.Retailer;
@@ -15,6 +16,7 @@ import jakarta.ws.rs.core.Response;
 
 import java.util.UUID;
 
+@Secured
 @Path("/retailers")
 public class RetailerResource extends BaseResource {
     RetailerService service = new RetailerServiceImpl();

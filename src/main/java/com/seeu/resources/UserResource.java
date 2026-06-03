@@ -1,5 +1,6 @@
 package com.seeu.resources;
 
+import com.seeu.annotations.Secured;
 import com.seeu.common.Responses;
 import com.seeu.common.Utils;
 import com.seeu.domains.User;
@@ -15,6 +16,7 @@ import jakarta.ws.rs.core.Response;
 
 import java.util.UUID;
 
+@Secured
 @Path("/users")
 public class UserResource extends BaseResource {
     UserService service = new UserServiceImpl();
