@@ -34,6 +34,30 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User getByEmail(String email) throws Exception {
+        Connection connection = DataSource.getConnection();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            ps = connection.prepareStatement(SQL.GET_BY_EMAIL);
+            ps.setString(1, email);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return new User(rs);
+            }
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (ps != null) {
+                ps.close();
+            }
+            connection.close();
+        }
+        return null;
+    }
+
+    @Override
     public void save(User user) throws Exception {
         try (Connection connection = DataSource.getConnection(); PreparedStatement ps = connection.prepareStatement(SQL.SAVE)) {
             user.populatePs(ps);
@@ -53,6 +77,11 @@ public class UserServiceImpl implements UserService {
         public static final String GET_BY_ID = """
                 SELECT * FROM users
                 WHERE id = ?::uuid;
+                """;
+
+        public static final String GET_BY_EMAIL = """
+                SELECT * FROM users
+                WHERE email = ?;
                 """;
 
         public static final String SAVE = """
