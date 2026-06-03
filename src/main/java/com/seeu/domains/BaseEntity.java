@@ -1,6 +1,7 @@
 package com.seeu.domains;
 
 import com.google.gson.annotations.SerializedName;
+import com.seeu.common.Responses;
 
 import java.util.UUID;
 
@@ -21,7 +22,7 @@ public abstract class BaseEntity {
             UUID.fromString(id);
             return null;
         } catch (Exception ignored) {
-            return "Invalid ID value: " + id;
+            return Responses.INVALID_ID;
         }
     }
 

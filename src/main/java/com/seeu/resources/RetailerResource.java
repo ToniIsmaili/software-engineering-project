@@ -1,5 +1,7 @@
 package com.seeu.resources;
 
+import com.seeu.common.Responses;
+import com.seeu.common.Utils;
 import com.seeu.domains.Retailer;
 import com.seeu.services.RetailerService;
 import com.seeu.services.RetailerServiceImpl;
@@ -25,16 +27,14 @@ public class RetailerResource extends BaseResource {
     @GET
     @Path("/{retailer_id}")
     public Response get(@PathParam("retailer_id") String retailerId) throws Exception {
-        if (retailerId == null || retailerId.isEmpty()) {
-            throw new BadRequestException("Invalid ID.");
-        }
+        validateIds(retailerId);
         return Response.ok(toJson(service.get(retailerId))).build();
     }
 
     @PUT
     public Response save(String payload) throws Exception {
         Retailer retailer = fromJson(payload, Retailer.class);
-        if (retailer.getId() == null) {
+        if (Utils.isNullOrEmpty(retailer.getId())) {
             retailer.setId(UUID.randomUUID().toString());
         }
         String validation = retailer.validate();
@@ -42,16 +42,14 @@ public class RetailerResource extends BaseResource {
             throw new BadRequestException(validation);
         }
         service.save(retailer);
-        return Response.ok().build();
+        return Response.ok(Responses.SAVE_SUCCESSFUL).build();
     }
 
     @DELETE
     @Path("/{retailer_id}")
     public Response delete(@PathParam("retailer_id") String retailerId) throws Exception {
-        if (retailerId == null || retailerId.isEmpty()) {
-            throw new BadRequestException("Invalid ID.");
-        }
+        validateIds(retailerId);
         service.delete(retailerId);
-        return Response.ok().build();
+        return Response.ok(Responses.DELETE_SUCCESSFUL).build();
     }
 }

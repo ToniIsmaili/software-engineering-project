@@ -1,5 +1,7 @@
 package com.seeu.resources;
 
+import com.seeu.common.Responses;
+import com.seeu.common.Utils;
 import com.seeu.domains.User;
 import com.seeu.services.UserService;
 import com.seeu.services.UserServiceImpl;
@@ -20,16 +22,14 @@ public class UserResource extends BaseResource {
     @GET
     @Path("/{user_id}")
     public Response get(@PathParam("user_id") String userId) throws Exception {
-        if (userId == null || userId.isEmpty()) {
-            throw new BadRequestException("Invalid ID.");
-        }
+        validateIds(userId);
         return Response.ok(toJson(service.get(userId))).build();
     }
 
     @PUT
     public Response save(String payload) throws Exception {
         User user = fromJson(payload, User.class);
-        if (user.getId() == null || user.getId().isEmpty()) {
+        if (Utils.isNullOrEmpty(user.getId())) {
             user.setId(UUID.randomUUID().toString());
         }
         String validate = user.validate();
@@ -37,16 +37,14 @@ public class UserResource extends BaseResource {
             throw new BadRequestException(validate);
         }
         service.save(user);
-        return Response.ok("Save successful.").build();
+        return Response.ok(Responses.SAVE_SUCCESSFUL).build();
     }
 
     @DELETE
     @Path("/{user_id}")
     public Response delete(@PathParam("user_id") String userId) throws Exception {
-        if (userId == null || userId.isEmpty()) {
-            throw new BadRequestException("Invalid ID.");
-        }
+        validateIds(userId);
         service.delete(userId);
-        return Response.ok("Deleted successfully.").build();
+        return Response.ok(Responses.DELETE_SUCCESSFUL).build();
     }
 }
